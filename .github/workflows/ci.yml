@@ -1,0 +1,23 @@
+name: Mimic CI
+
+on:
+  push:
+    branches: [ "main", "master", "feat/*", "fix/*" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test-and-build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Test Suite
+        run: |
+          go test -v ./...
+
+      - name: Compile Binary
+        run: |
+          mkdir -p bin
+          go build -ldflags="-s -w" -o bin/mimic main.go
